@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Upcoming Rides</h1>
+
+<div class="ride-list">
+
+    {% for ride in rides %}
+    <div class="ride-card">
+
+        <h2 class="link">
+            <a href="{% url 'ride_detail' ride.slug %}">
+                {{ ride.title }}
+            </a>
+        </h2>
+
+        <p>
+            <strong>Date:</strong> {{ ride.date }}<br>
+            <strong>Time:</strong> {{ ride.time }}<br>
+            <strong>Discipline:</strong> {{ ride.get_discipline_display }}<br>
+            <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
+        </p>
+
+        <p>
+            <strong>Created by:</strong>
+            {% if ride.user.first_name and ride.user.last_name %}
+            {{ ride.user.first_name }} {{ ride.user.last_name }}
+            {% else %}
+            {{ ride.user.username }}
+            {% endif %}
+        </p>
+
+    </div>
+    {% empty %}
+    <p>No upcoming rides available.</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

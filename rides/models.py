@@ -49,3 +49,21 @@ class Ride(models.Model):
             super().save(*args, **kwargs)  # first save to get ID
             self.slug = f"{slugify(self.title)}-{self.id}"
         super().save(*args, **kwargs)
+
+
+
+class Attendance(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="attendances"
+    )
+    ride = models.ForeignKey(
+        Ride,
+        on_delete=models.CASCADE,
+        related_name="attendances"
+    )
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "ride")

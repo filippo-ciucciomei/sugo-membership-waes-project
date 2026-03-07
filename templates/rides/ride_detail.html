@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ ride.title }}</h1>
+
+<p>
+    <strong>Date:</strong> {{ ride.date }} <br>
+    <strong>Time:</strong> {{ ride.time }} <br>
+    <strong>Discipline:</strong> {{ ride.discipline }} <br>
+    <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
+</p>
+
+
+{% if user.is_authenticated %}
+
+    {% if already_joined %}
+
+    <p>
+       <a href="{% url 'leave_ride' ride.slug %}">
+           <button type="button">Leave Ride</button>
+       </a>
+    </p>
+
+    {% elif ride.attendances.count >= ride.max_riders %}
+
+    <p><strong>Ride Full</strong></p>
+
+    {% else %}
+
+    <p>
+        <a href="{% url 'join_ride' ride.slug %}">
+            <button type="button">Join Ride</button>
+        </a>
+    </p>
+
+    {% endif %}
+
+{% endif %}
+
+
+<p>
+    <strong>Description:</strong><br>
+    {{ ride.description }}
+</p>
+
+<p>
+    Ride created by {{ ride.user.first_name }} {{ ride.user.last_name }}
+</p>
+
+{% if ride.gpx_file %}
+<p>
+    <a href="{{ ride.gpx_file.url }}">Download GPX</a>
+</p>
+{% endif %}
+
+<p>
+    <a href="{% url 'ride_list' %}">← Back to rides</a>
+</p>
+
+{% endblock %}
