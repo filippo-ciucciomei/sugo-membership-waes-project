@@ -2,7 +2,21 @@
 
 {% block content %}
 
+
+{% if user.is_authenticated and user == ride.user %}
+
+<h1>
+  {{ ride.title }} 
+  <a href="{% url 'delete_ride' ride.slug %}"> <i class="delete-edit fa-regular fa-trash-can"></i></a>
+  <a href="{% url 'update_ride' ride.slug %}"><i class="delete-edit fa-regular fa-pen-to-square"></i></a>
+</h1>
+
+
+{% else %}
+
 <h1>{{ ride.title }}</h1>
+
+{% endif %}
 
 <p>
     <strong>Date:</strong> {{ ride.date }} <br>

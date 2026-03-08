@@ -4,6 +4,12 @@
 
 <h1>Upcoming Rides</h1>
 
+{% if user.is_authenticated %}
+    <a href="{% url 'create_ride' %}">
+        <button>Create Ride</button>
+    </a>
+{% endif %}
+
 <div class="ride-list">
 
     {% for ride in rides %}

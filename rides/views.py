@@ -3,6 +3,9 @@ from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from .models import Ride, Attendance
 from django.shortcuts import get_object_or_404, redirect
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .forms import RideForm
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -59,3 +62,43 @@ def leave_ride(request, slug):
     ).delete()
 
     return redirect("ride_detail", slug=ride.slug)
+
+
+class CreateRideView(CreateView):
+    model = Ride
+    form_class = RideForm
+    template_name = "rides/create_ride.html"
+    success_url = reverse_lazy("ride_list")
+
+    def form_valid(self, form):
+        # Set the user to the currently logged-in user before saving the form
+        form.instance.user = self.request.user 
+        return super().form_valid(form)
+    
+
+class UpdateRideView(UpdateView):
+    model = Ride
+    form_class = RideForm
+    template_name = "rides/update_ride.html"
+    
+    def get_success_url(self):
+        return reverse_lazy("ride_detail", kwargs={"slug": self.object.slug})
+    
+    def form_valid(self, form):
+        # Ensure that only the owner can update the ride
+        if form.instance.user != self.request.user:
+            form.add_error(None, "You are not allowed to edit this ride.")
+            return self.form_invalid(form)
+        return super().form_valid(form)
+    
+    
+class DeleteRideView(DeleteView):
+    model = Ride
+    template_name = "rides/delete_ride.html"
+    success_url = reverse_lazy("ride_list")
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)

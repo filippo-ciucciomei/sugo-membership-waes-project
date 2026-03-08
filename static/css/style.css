@@ -43,3 +43,14 @@ a {
     color: #000000;
     text-decoration: none;
 }
+
+.delete-edit {
+    font-size: 12px;
+    vertical-align: text-top;
+    margin-top: 9px;
+    opacity: 0.7;
+}
+
+.delete-edit:hover {
+  opacity: 1;
+}
