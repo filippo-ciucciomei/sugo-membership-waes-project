@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 text-center">
+
+    <h1>Payment cancelled</h1>
+
+    <p class="mt-3">
+        Your membership purchase was cancelled.
+    </p>
+
+    <p>
+        You can try again anytime.
+    </p>
+
+    <a href="{% url 'membership_required' %}" class="btn btn-primary mt-3">
+        Back to Membership
+    </a>
+
+</div>
+
+{% endblock %}

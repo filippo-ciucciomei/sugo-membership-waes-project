@@ -2,12 +2,16 @@
 
 {% block content %}
 
-<h1>Membership Required</h1>
+<h1>Membership</h1>
 
-<p>You need an active membership to access rides.</p>
+<p>{{ message }}</p>
 
-<p>
-    For now, please contact the club admin to activate your membership.
-</p>
+{% if has_active_membership %}
+    <p>You already have access to member rides.</p>
+{% else %}
+    <a href="{% url 'membership_checkout' %}">
+        <button type="button">{{ button_text }}</button>
+    </a>
+{% endif %}
 
 {% endblock %}

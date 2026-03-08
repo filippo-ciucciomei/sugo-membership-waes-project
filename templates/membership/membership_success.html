@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 text-center">
+
+    <h1>Membership activated</h1>
+
+    <p class="mt-3">
+        Your payment was successful and your membership is now active.
+    </p>
+
+    <p>
+        You can now access all club rides.
+    </p>
+
+    <a href="{% url 'ride_list' %}" class="btn btn-primary mt-3">
+        View Rides
+    </a>
+
+</div>
+
+{% endblock %}
