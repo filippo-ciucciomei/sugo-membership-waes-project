@@ -6,13 +6,14 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import RideForm
 from django.urls import reverse_lazy
+from membership.mixins import MembershipRequiredMixin
 
 # Create your views here.
 
 def home(request):
     return render(request, "home.html")
 
-class RideListView(ListView):
+class RideListView(MembershipRequiredMixin, ListView):
     model = Ride
     template_name = "rides/ride_list.html"
     context_object_name = "rides"
@@ -22,7 +23,7 @@ class RideListView(ListView):
         return Ride.objects.filter(date__gte=today).order_by("date", "time")
 
 
-class RideDetailView(DetailView):
+class RideDetailView(MembershipRequiredMixin, DetailView):
     model = Ride
     template_name = "rides/ride_detail.html"
     context_object_name = "ride"
@@ -64,7 +65,7 @@ def leave_ride(request, slug):
     return redirect("ride_detail", slug=ride.slug)
 
 
-class CreateRideView(CreateView):
+class CreateRideView(MembershipRequiredMixin, CreateView):
     model = Ride
     form_class = RideForm
     template_name = "rides/create_ride.html"
@@ -76,7 +77,7 @@ class CreateRideView(CreateView):
         return super().form_valid(form)
     
 
-class UpdateRideView(UpdateView):
+class UpdateRideView(MembershipRequiredMixin, UpdateView):
     model = Ride
     form_class = RideForm
     template_name = "rides/update_ride.html"
@@ -92,7 +93,7 @@ class UpdateRideView(UpdateView):
         return super().form_valid(form)
     
     
-class DeleteRideView(DeleteView):
+class DeleteRideView(MembershipRequiredMixin, DeleteView):
     model = Ride
     template_name = "rides/delete_ride.html"
     success_url = reverse_lazy("ride_list")

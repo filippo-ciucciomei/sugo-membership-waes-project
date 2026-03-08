@@ -24,4 +24,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('', home, name='home'),
     path("rides/", include("rides.urls")),
+    path("membership/", include("membership.urls")),
 ]
