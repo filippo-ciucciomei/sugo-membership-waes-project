@@ -7,6 +7,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import RideForm
 from django.urls import reverse_lazy
 from membership.mixins import MembershipRequiredMixin
+from .forms import CommentForm
 
 # Create your views here.
 
@@ -31,6 +32,8 @@ class RideDetailView(MembershipRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ride = self.get_object()
+        context["comment_form"] = CommentForm()
+        context["comments"] = self.object.comments.all()
 
         if self.request.user.is_authenticated:
             context["already_joined"] = Attendance.objects.filter(
@@ -41,6 +44,21 @@ class RideDetailView(MembershipRequiredMixin, DetailView):
             context["already_joined"] = False
 
         return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.ride = self.object
+            comment.save()
+            return redirect("ride_detail", slug=self.object.slug)
+
+        context = self.get_context_data()
+        context["comment_form"] = form
+        return self.render_to_response(context)
 
 
 def join_ride(request, slug):
