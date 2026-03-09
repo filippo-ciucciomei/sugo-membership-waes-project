@@ -10,14 +10,26 @@
             join events, and share the details of each route with the community.
         </p>
 
+
+        {% if user.is_authenticated %}
+
+        <h1>
+            <a href="/rides">Explore Rides</a>
+        </h1>
+
+        {% else %}
+
         <p>
             Join the club to access members-only rides, create your own events,
             and take part in the conversation.
         </p>
 
         <button class="btn btn-dark btn-lg mt-3">
-            Join Us
+            <a href="{% url 'account_login' %}" class="text-white">Join Us</a>
         </button>
+
+        {% endif %}
+        
     </div>
 </section>
 {% endblock %}
