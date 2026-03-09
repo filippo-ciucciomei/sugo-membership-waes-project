@@ -1,13 +1,17 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
-from .models import Ride, Attendance
+from .models import Ride, Attendance, Comment
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import RideForm
 from django.urls import reverse_lazy
 from membership.mixins import MembershipRequiredMixin
 from .forms import CommentForm
+from django.core.exceptions import PermissionDenied
+from django.views.decorators.http import require_GET
+
 
 # Create your views here.
 
@@ -45,6 +49,7 @@ class RideDetailView(MembershipRequiredMixin, DetailView):
 
         return context
     
+    # Handle POST requests for submitting comments
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = CommentForm(request.POST)
@@ -59,6 +64,8 @@ class RideDetailView(MembershipRequiredMixin, DetailView):
         context = self.get_context_data()
         context["comment_form"] = form
         return self.render_to_response(context)
+    
+    
 
 
 def join_ride(request, slug):
@@ -121,3 +128,49 @@ class DeleteRideView(MembershipRequiredMixin, DeleteView):
         if self.object.user != self.request.user:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
+
+
+class UpdateCommentView(MembershipRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "rides/edit_comment.html"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "ride_detail",
+            kwargs={"slug": self.object.ride.slug}
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ride"] = self.object.ride
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # Only allow the comment author to edit their comment
+        if self.object.user != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+
+class DeleteCommentView(MembershipRequiredMixin, DeleteView):
+    model = Comment
+
+    def get_success_url(self):
+        # Redirect back to the ride detail page
+        return reverse_lazy(
+            "ride_detail",
+            kwargs={"slug": self.object.ride.slug}
+        )
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # Only allow the comment author to delete their comment
+        if self.object.user != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        # Skip confirmation page and delete directly
+        return self.delete(request, *args, **kwargs)

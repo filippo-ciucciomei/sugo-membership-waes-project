@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Edit Comment</h1>
+
+<p>
+    <strong>Ride:</strong> {{ ride.title }}
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Update Comment</button>
+    <a href="{% url 'ride_detail' ride.slug %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}

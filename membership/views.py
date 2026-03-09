@@ -1,14 +1,15 @@
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.views import View
+from django.views.decorators.http import require_GET
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+
 from .models import MembershipPlan, MembershipPurchase
 
 import stripe
-from django.conf import settings
 
-from django.http import HttpResponse
-import json
-
-from django.views.decorators.csrf import csrf_exempt
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -55,6 +56,7 @@ def membership_required(request):
 # View to create a Stripe checkout session for purchasing or renewing a membership plan. 
 # It checks if the user is authenticated and if there is an active membership plan available, 
 # then creates a checkout session with the plan details and redirects the user to the Stripe checkout page.
+@require_GET
 def create_checkout_session(request):
     if not request.user.is_authenticated:
         return redirect("account_login")
@@ -62,9 +64,10 @@ def create_checkout_session(request):
     plan = MembershipPlan.objects.filter(is_active=True).first()
 
     if not plan:
-        return redirect("membership_required")
+        return JsonResponse({"error": "No active membership plan found."}, status=400)
 
     session = stripe.checkout.Session.create(
+        ui_mode="embedded",
         payment_method_types=["card"],
         mode="payment",
         line_items=[
@@ -79,8 +82,7 @@ def create_checkout_session(request):
                 "quantity": 1,
             }
         ],
-        success_url=request.build_absolute_uri("/membership/success/"),
-        cancel_url=request.build_absolute_uri("/membership/cancel/"),
+        return_url=request.build_absolute_uri("/membership/success/") + "?session_id={CHECKOUT_SESSION_ID}",
         metadata={
             "user_id": request.user.id,
             "plan_id": plan.id,
@@ -88,13 +90,41 @@ def create_checkout_session(request):
         },
     )
 
-    return redirect(session.url, code=303)
+    return JsonResponse({"clientSecret": session.client_secret})
 
 
-from django.http import HttpResponse
-import json
 
-# Stripe webhook to handle checkout session completion and create a MembershipPurchase record for the user.
+# redirect to the success page after successful checkout
+def membership_success(request):
+    return render(request, "membership/membership_success.html")
+
+def membership_cancel(request):
+    return render(request, "membership/membership_cancel.html")
+
+def membership_checkout_page(request):
+    if not request.user.is_authenticated:
+        return redirect("account_login")
+
+    return render(
+        request,
+        "membership/membership_checkout.html",
+        {"STRIPE_PUBLISHABLE_KEY": settings.STRIPE_PUBLISHABLE_KEY}
+    )
+
+# View to handle post-login redirection based on the user's membership status. 
+# If the user has an active membership, they are redirected to the home page; 
+# otherwise, they are redirected to the membership required page.
+class PostLoginRedirectView(View):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect("account_login")
+
+        if user_has_active_membership(request.user):
+            return redirect("home")
+
+        return redirect("membership_required")
+    
+
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
@@ -106,35 +136,32 @@ def stripe_webhook(request):
             sig_header,
             settings.STRIPE_WEBHOOK_SECRET
         )
+
+        if event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
+
+            user_id = session["metadata"]["user_id"]
+            plan_id = session["metadata"]["plan_id"]
+
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+
+            user = User.objects.get(id=user_id)
+            plan = MembershipPlan.objects.get(id=plan_id)
+
+            MembershipPurchase.objects.create(
+                user=user,
+                plan=plan,
+                price_paid=plan.price
+            )
+
+        return HttpResponse(status=200)
+
     except ValueError:
         return HttpResponse(status=400)
+
     except stripe.error.SignatureVerificationError:
         return HttpResponse(status=400)
 
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
-
-        user_id = session["metadata"]["user_id"]
-        plan_id = session["metadata"]["plan_id"]
-
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-
-        user = User.objects.get(id=user_id)
-        plan = MembershipPlan.objects.get(id=plan_id)
-
-        MembershipPurchase.objects.create(
-            user=user,
-            plan=plan,
-            price_paid=plan.price
-        )
-
-    return HttpResponse(status=200)
-
-
-# redirect to the success page after successful checkout
-def membership_success(request):
-    return render(request, "membership/membership_success.html")
-
-def membership_cancel(request):
-    return render(request, "membership/membership_cancel.html")
+    except Exception:
+        return HttpResponse(status=500)

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Complete your membership payment</h1>
+
+    <div id="checkout-message" class="mb-3"></div>
+    <div id="checkout"></div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const publishableKey = "{{ STRIPE_PUBLISHABLE_KEY|default:'' }}";
+    const messageBox = document.getElementById("checkout-message");
+
+    if (!publishableKey) {
+        messageBox.innerHTML = `<div class="alert alert-danger">Stripe publishable key is missing.</div>`;
+    } else {
+        const stripe = Stripe(publishableKey);
+
+        async function initializeCheckout() {
+            try {
+                const response = await fetch("{% url 'membership_checkout_stripe' %}", {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                const data = await response.json();
+                console.log("Checkout session response:", data);
+
+                if (data.error) {
+                    messageBox.innerHTML =
+                        `<div class="alert alert-danger">${data.error}</div>`;
+                    return;
+                }
+
+                if (!data.clientSecret) {
+                    messageBox.innerHTML =
+                        `<div class="alert alert-danger">No clientSecret returned from the server.</div>`;
+                    return;
+                }
+
+                const checkout = await stripe.initEmbeddedCheckout({
+                    fetchClientSecret: async () => data.clientSecret,
+                });
+
+                checkout.mount("#checkout");
+            } catch (error) {
+                console.error(error);
+                messageBox.innerHTML =
+                    `<div class="alert alert-danger">Checkout failed to load: ${error.message}</div>`;
+            }
+        }
+
+        initializeCheckout();
+    }
+</script>
+
+
+
+{% endblock %}
