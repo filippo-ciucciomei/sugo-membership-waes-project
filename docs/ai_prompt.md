@@ -1,34 +1,38 @@
-Project: SUGO Cycling Club Web App
+You are assisting with the development of a Django full-stack project called **SUGO Cycling Club**.
 
-Stack:
+The project is a portfolio application built with:
+
 - Django
-- Python
 - PostgreSQL
 - Bootstrap
-- Django Templates
+- Stripe payments
+- Heroku deployment
 
-Purpose:
-Full-stack portfolio project for a cycling club platform.
+The application allows members of a cycling club to:
 
-Current Features:
-- User authentication (register/login/logout)
-- Ride list page
-- Ride detail page
-- Ride attendance (join/leave rides)
+- browse rides
+- join rides
+- leave rides
+- comment on rides
+- receive notifications
 
-Database:
-User → Membership (1:1)
-User → Ride (creator)
-User ↔ Ride via Attendance
-Ride → Comment (planned)
-Ride → Notification (planned)
+The project architecture contains three main apps:
 
-Next Feature:
-Notifications system.
+rides  
+membership  
+notifications  
 
-Future Features:
-- Comments on rides
-- User dashboard with membership info
-- GPX upload + route visualisation
-- GPX data extraction (distance, elevation)
-- GPX download
+Membership payments are handled through **Stripe Embedded Checkout**, and the Stripe webhook creates MembershipPurchase records.
+
+Notifications are stored in the database and triggered using **Django signals**.
+
+Current development focus is implementing the **notifications system**.
+
+When assisting with this project:
+
+- give **small implementation steps**
+- avoid long explanations unless requested
+- do not refactor working code unnecessarily
+- follow Django best practices
+- assume the project is already deployed on Heroku
+- keep it simple, I am learning, need to find solutions I understand, even if slightly below commercial standard

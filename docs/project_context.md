@@ -1,43 +1,103 @@
 # SUGO Cycling Club Web App
 
-## Project Overview
+## Overview
 
-SUGO is a web application for a cycling club that allows members to discover rides, join events, interact with other members, and manage their membership.
+SUGO is a Django full-stack web application for a cycling club.
 
-The project is being built as a **full-stack portfolio project** using **Django, PostgreSQL, and Bootstrap** to demonstrate backend, database, and frontend development skills relevant for junior developer roles.
+Members can discover rides, join events, interact with other cyclists, and manage their membership.
+
+The project is being built as a a **portfolio project** to demonstrate backend, database, and frontend skills relevant for junior developer roles.
 
 ---
 
 # Tech Stack
 
-## Backend
+Backend
 - Python
 - Django
 - PostgreSQL
 
-## Frontend
+Frontend
 - HTML
 - CSS
 - Bootstrap
 - Django Templates
 
-## Tools
+Infrastructure
+- Heroku deployment
+- Stripe payments
+- Stripe webhooks
+
+Tools
 - Git / GitHub
-- GPX files for route data
 - Mermaid diagrams for ERD documentation
+- GPX files (planned for route data)
 
 ---
 
 # Core Features Implemented
 
 ## Authentication
+
 Users can:
 
 - Register
 - Login
 - Logout
 
-The project uses **Django's built-in authentication system**.
+The application uses **Django's built-in authentication system**.
+
+---
+
+## Membership System
+
+The application is **membership gated**.
+
+Users must purchase a membership to access rides.
+
+Payment flow:
+
+User signup  
+↓  
+Redirect to membership purchase page  
+↓  
+Stripe Embedded Checkout  
+↓  
+Stripe webhook  
+↓  
+MembershipPurchase created  
+↓  
+User gains access to rides  
+
+Membership status is verified using a helper function:
+
+user_has_active_membership(user)
+
+Users without an active membership are redirected to the membership purchase page.
+
+---
+
+## Stripe Integration
+
+Payments are handled using **Stripe Embedded Checkout**.
+
+Architecture:
+
+membership_checkout_page  
+↓  
+create_checkout_session  
+↓  
+Stripe Embedded Checkout  
+↓  
+Stripe webhook  
+↓  
+MembershipPurchase created  
+
+Webhook endpoint:
+
+/membership/webhook/
+
+Stripe keys are stored in environment variables.
 
 ---
 
@@ -45,94 +105,38 @@ The project uses **Django's built-in authentication system**.
 
 Users can:
 
-- View a **list of rides**
-- View **ride details**
-
-Ride information includes:
-
-- Title
-- Description
-- Date
-- Location
-- Creator
-
-Future rides may include **GPX route files**.
-
----
-
-## Attendance
-
-Users can:
-
+- View a list of rides
+- View ride details
 - Join rides
 - Leave rides
 
-Attendance records are stored in a join table between users and rides.
-
----
-
-# Database Structure
-
-## USER
-Uses Django's built-in User model.
-
----
-
-## MEMBERSHIP
-
-Stores club membership status.
-
-Fields include:
-
-- membership_type
-- expiry_date
-- status
-
-Relationship:
-
-User → Membership (One-to-One)
-
----
-
-## RIDE
-
-Represents a cycling event.
-
-Fields include:
+Ride information includes:
 
 - title
 - description
 - date
 - location
-- created_by
-- gpx_file (planned)
-
-Relationships:
-
-- User → Ride (creator)
-- Ride → Attendance
-- Ride → Comment
-- Ride → Notification
+- creator
 
 ---
 
-## ATTENDANCE
+## Attendance
 
-Tracks which users join rides.
+Tracks which users joined rides.
 
-Fields include:
+Relationship:
+
+User ↔ Ride (through Attendance)
+
+Fields:
 
 - user
 - ride
 - joined_at
 
-Relationship:
-
-User ↔ Ride (Many-to-Many through Attendance)
-
 ---
 
-## COMMENT (planned)
+## Comments
 
 Users can comment on rides.
 
@@ -143,120 +147,136 @@ Fields:
 - content
 - created_at
 
+Comments appear on the ride detail page.
+
 ---
 
-## NOTIFICATION (planned)
+# Database Overview
 
-Users receive notifications about relevant events.
+## User
 
-Examples:
+Uses Django's built-in User model.
 
-- New ride created
-- Ride update
-- New comment
-- Membership expiry reminder
+---
+
+## MembershipPlan
+
+Defines available membership plans.
+
+Fields:
+
+- name
+- price
+- is_active
+
+---
+
+## MembershipPurchase
+
+Stores membership purchases created by the Stripe webhook.
 
 Fields:
 
 - user
-- message
-- related_ride
-- read_status
+- plan
+- price_paid
+- created_at
+- expiry_date
+
+---
+
+## Ride
+
+Cycling event created by a user.
+
+Fields:
+
+- title
+- description
+- date
+- location
+- user (creator)
+
+Relationships:
+
+User → Ride  
+Ride → Attendance  
+Ride → Comment  
+Ride → Notification  
+
+---
+
+## Attendance
+
+Join table between users and rides.
+
+Fields:
+
+- user
+- ride
+- joined_at
+
+---
+
+## Comment
+
+Ride comments.
+
+Fields:
+
+- user
+- ride
+- content
 - created_at
 
 ---
 
-# Core Pages
+## Notification (in development)
 
-## Home
+Notifications are stored in the database.
 
-Landing page showing:
+Fields:
 
-- Club introduction
-- Upcoming rides
-- Navigation to ride list
-
----
-
-## Ride List
-
-Displays all rides.
-
-Users can:
-
-- Browse rides
-- Click to view ride details
+- recipient
+- actor
+- ride
+- type
+- is_read
+- created_at
 
 ---
 
-## Ride Detail
+# Notifications System (Current Work)
 
-Displays:
+Notifications are generated when:
 
-- Ride description
-- Date/time
-- Location
-- Attendees
-- Comments
-- Join/Leave ride button
-- GPX route (planned)
+- A ride is created
+- A user joins a ride
+- A user leaves a ride
+- A user comments on a ride
 
----
-
-## User Dashboard (planned)
-
-Personal user area displaying:
-
-- Membership status
-- Joined rides
-- Notifications
-- Renewal options
-
----
-
-# Features Currently In Development
-
-## Notifications System
-
-Users will receive notifications when:
-
-- A ride they joined is updated
-- Someone comments on a ride
-- A new ride is created
-- Membership is expiring
+Implementation uses **Django signals** so notifications are triggered automatically when model events occur.
 
 ---
 
 # Future Features
 
-## Ride Comments
-Users will be able to comment on ride pages.
+## User Dashboard
+
+Personal user area showing:
+
+- membership status
+- joined rides
+- notifications
+- membership renewal options
 
 ---
 
 ## GPX Route Support
 
-Rides will support GPX files.
-
 Planned functionality:
 
-- Upload GPX file
-- Display route map
-- Extract ride statistics
-  - Distance
-  - Elevation gain
-- GPX download option
-
----
-
-# Project Goals
-
-The project aims to demonstrate:
-
-- Django backend architecture
-- relational database design
-- authentication systems
-- event participation features
-- file upload and processing (GPX)
-- frontend UI with Bootstrap
-- complete full-stack feature implementation
+- upload GPX files
+- map route visualisation
+- extract route statistics
+- GPX download

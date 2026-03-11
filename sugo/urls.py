@@ -25,4 +25,5 @@ urlpatterns = [
     path('', home, name='home'),
     path("rides/", include("rides.urls")),
     path("membership/", include("membership.urls")),
+    path("notifications/", include("notifications.urls")),
 ]

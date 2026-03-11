@@ -44,6 +44,54 @@
                 <a class="nav-link d-inline" href="/rides">Rides</a>
                 |
                 <i class="fa-solid fa-user"></i>
+                |
+
+                <div class="dropdown d-inline">
+
+                    <a class="nav-link d-inline position-relative" href="#" role="button" data-bs-toggle="dropdown">
+
+                        <i class="fa-solid fa-bell"></i>
+
+                        {% if unread_notifications_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ unread_notifications_count }}
+                        </span>
+                        {% endif %}
+
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="width:300px;">
+
+                        {% for notification in latest_notifications %}
+                        <li>
+                            <a href="{% url 'ride_detail' slug=notification.ride.slug %}"
+                                class="dropdown-item small border-bottom py-2 text-wrap {% if not notification.is_read %}fw-bold{% endif %}">
+
+                                <strong>{{ notification.actor }}</strong>
+
+                                {% if notification.type == "ride_joined" %}
+                                joined
+                                {% elif notification.type == "ride_left" %}
+                                left
+                                {% elif notification.type == "ride_comment" %}
+                                commented on
+                                {% elif notification.type == "ride_created" %}
+                                created
+                                {% endif %}
+
+                                <strong>{{ notification.ride.title }}</strong>
+                            </a>
+                        </li>
+                        {% empty %}
+                        <li class="px-3 py-2 text-muted small">
+                            No notifications
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
             </div>
 
         </div>
@@ -85,3 +133,32 @@
 </body>
 
 </html>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const bellDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
+
+    if (bellDropdown) {
+        bellDropdown.addEventListener("click", function () {
+            fetch("{% url 'mark_notifications_read' %}", {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const badge = document.querySelector(".badge");
+                if (badge) {
+                    badge.remove();
+                }
+
+                document.querySelectorAll(".dropdown-item.fw-bold").forEach(item => {
+                    item.classList.remove("fw-bold");
+                });
+            });
+        });
+    }
+});
+</script>
