@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Your Notifications</h2>
+
+<ul class="list-group">
+
+{% for notification in notifications %}
+
+<li class="list-group-item {% if not notification.is_read %}fw-bold{% endif %}">
+
+    <strong>{{ notification.actor }}</strong>
+
+    {% if notification.type == "ride_joined" %}
+    joined
+    {% elif notification.type == "ride_left" %}
+    left
+    {% elif notification.type == "ride_comment" %}
+    commented on
+    {% elif notification.type == "ride_created" %}
+    created
+    {% endif %}
+
+    <a href="{% url 'ride_detail' slug=notification.ride.slug %}">
+        {{ notification.ride.title }}
+    </a>
+
+</li>
+
+{% empty %}
+
+<li class="list-group-item">
+No notifications yet.
+</li>
+
+{% endfor %}
+
+</ul>
+
+{% endblock %}

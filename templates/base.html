@@ -43,14 +43,13 @@
                 |
                 <a class="nav-link d-inline" href="/rides">Rides</a>
                 |
-                <i class="fa-solid fa-user"></i>
-                |
+                <i class="fa-solid fa-user mx-1"></i>
 
                 <div class="dropdown d-inline">
 
                     <a class="nav-link d-inline position-relative" href="#" role="button" data-bs-toggle="dropdown">
 
-                        <i class="fa-solid fa-bell"></i>
+                        <i class="fa-solid fa-bell mx-1"></i>
 
                         {% if unread_notifications_count > 0 %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -87,6 +86,11 @@
                             No notifications
                         </li>
                         {% endfor %}
+                        <li>
+                            <a href="{% url 'notifications_list' %}" class="dropdown-item text-center small py-2">
+                                View all notifications
+                            </a>
+                        </li>
 
                     </ul>
 
@@ -136,29 +140,29 @@
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const bellDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
+    document.addEventListener("DOMContentLoaded", function () {
+        const bellDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
 
-    if (bellDropdown) {
-        bellDropdown.addEventListener("click", function () {
-            fetch("{% url 'mark_notifications_read' %}", {
-                method: "GET",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const badge = document.querySelector(".badge");
-                if (badge) {
-                    badge.remove();
-                }
+        if (bellDropdown) {
+            bellDropdown.addEventListener("click", function () {
+                fetch("{% url 'mark_notifications_read' %}", {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const badge = document.querySelector(".badge");
+                        if (badge) {
+                            badge.remove();
+                        }
 
-                document.querySelectorAll(".dropdown-item.fw-bold").forEach(item => {
-                    item.classList.remove("fw-bold");
-                });
+                        document.querySelectorAll(".dropdown-item.fw-bold").forEach(item => {
+                            item.classList.remove("fw-bold");
+                        });
+                    });
             });
-        });
-    }
-});
+        }
+    });
 </script>
