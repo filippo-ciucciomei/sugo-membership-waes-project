@@ -54,3 +54,13 @@ a {
 .delete-edit:hover {
   opacity: 1;
 }
+
+#elevation-chart-container {
+    position: relative; 
+    height: 200px; 
+    width: 100%;
+}
+
+.renew {
+    margin: 8px;
+}

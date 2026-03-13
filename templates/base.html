@@ -15,6 +15,9 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Leaflet - Map Library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 
 <body>
@@ -43,13 +46,39 @@
                 |
                 <a class="nav-link d-inline" href="/rides">Rides</a>
                 |
-                <i class="fa-solid fa-user mx-1"></i>
+                <!-- <i class="fa-solid fa-user mx-1"></i> -->
+
+
+                <!-- MEMBERSHIP -->
 
                 <div class="dropdown d-inline">
 
-                    <a class="nav-link d-inline position-relative" href="#" role="button" data-bs-toggle="dropdown">
+                    {% if user.is_authenticated %}
+                    <a class="position-relative text-dark text-decoration-none mx-1" href="#" role="button" data-bs-toggle="dropdown">
 
-                        <i class="fa-solid fa-bell mx-1"></i>
+                        <i class="fa-solid fa-user mx-1"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="width:300px;">
+                      
+                            <li class="dropdown-item small py-2 text-wrap">Your membership status: <strong>{{ user_membership_status }}</strong></li>
+                            <li class="dropdown-item small py-2 text-wrap">Expiry date: <strong>{% if user_membership_expiry %}{{ user_membership_expiry|date:"M d, Y" }}{% else %}N/A{% endif %}</strong></li>
+                            <li class="renew"> <a href="{% url 'membership_required' %}" class="btn btn-sm btn-secondary ms-2">Renew</a></li>
+
+                    </ul>
+
+                </div>
+                {% endif %}
+                
+
+                <!-- NOTIFICATIONS -->
+
+                <div class="dropdown d-inline">
+
+                    <a class="position-relative text-dark text-decoration-none" href="#" role="button" data-bs-toggle="dropdown">
+
+                        <i class="fa-solid fa-bell"></i>
 
                         {% if unread_notifications_count > 0 %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -131,26 +160,21 @@
     </footer>
 
 
-    <!-- Bootstrap JS -->
+       <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-</body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const bellDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
 
-</html>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const bellDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
-
-        if (bellDropdown) {
-            bellDropdown.addEventListener("click", function () {
-                fetch("{% url 'mark_notifications_read' %}", {
-                    method: "GET",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
+            if (bellDropdown) {
+                bellDropdown.addEventListener("click", function () {
+                    fetch("{% url 'mark_notifications_read' %}", {
+                        method: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    })
                     .then(response => response.json())
                     .then(data => {
                         const badge = document.querySelector(".badge");
@@ -162,7 +186,18 @@
                             item.classList.remove("fw-bold");
                         });
                     });
-            });
-        }
-    });
-</script>
+                });
+            }
+        });
+    </script>
+
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- GPX Map Script -->
+    <script src="{% static 'js/gpx-map.js' %}"></script>
+</body>
+</html>

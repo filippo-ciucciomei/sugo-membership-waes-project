@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<div class="row">
+    <div class="col-md-6">
 
 {% if user.is_authenticated and user == ride.user %}
 
@@ -19,12 +21,12 @@
 {% endif %}
 
 <p>
-    <strong>Date:</strong> {{ ride.date }} <br>
-    <strong>Time:</strong> {{ ride.time }} <br>
-    <strong>Discipline:</strong> {{ ride.discipline }} <br>
-    <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
+    Ride created by {{ ride.user.username }} on {{ ride.created_at|date:"d M Y" }}.
 </p>
 
+<p>
+    <a href="{% url 'ride_list' %}">← Back to rides</a>
+</p>
 
 {% if user.is_authenticated %}
 
@@ -52,27 +54,65 @@
 
 {% endif %}
 
-
 <p>
+   <div><strong>Date:</strong> {{ ride.date }} </div> 
+    <div><strong>Time:</strong> {{ ride.time }} </div>
+    <div><strong>Discipline:</strong> {{ ride.discipline }} </div>
+    {% if ride.gpx_file %}
+    <div>
+        <strong>Distance:</strong> <span id="ride-distance"></span> km </div>
+    <div>
+        <strong>Elevation gain:</strong> <span id="ride-elevation"></span> m</div>
+    {% endif %}
+    <div><strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }} (
+        {% for attendance in ride.attendances.all %}
+            {{ attendance.user.username }}{% if not forloop.last %}, {% endif %}
+        {% endfor %})
+    
+    </div>
+</p>
+
+
+
+
+
+<p class="mb-3">
     <strong>Description:</strong><br>
     {{ ride.description }}
 </p>
 
-<p>
-    Ride created by {{ ride.user.first_name }} {{ ride.user.last_name }}
-</p>
+
+
+
 
 {% if ride.gpx_file %}
-<p>
-    <a href="{{ ride.gpx_file.url }}">Download GPX</a>
-</p>
+
+<button class="btn btn-primary mt-3">
+    <a href="{{ ride.gpx_file.url }}" class="text-white" download>Download GPX</a>
+</button>
+
 {% endif %}
 
-<p>
-    <a href="{% url 'ride_list' %}">← Back to rides</a>
-</p>
+</div>
+
+<div class="col-md-6"> 
+<!-- Route Map and Profile GPX Visualiser -->
+{% if ride.gpx_file %}
+<div class="my-4">
+    <div id="ride-map" style="height: 400px;" class="rounded border"></div>
+</div>
+
+<div id="elevation-chart-container" class="my-4" >
+    <canvas id="elevation-chart"></canvas>
+</div>
+
+{{ ride.gpx_file.url|json_script:"gpx-url" }}
+{% endif %}
+</div>
 
 <hr class="my-4">
+
+<div class="col-md-4">
 
 <h3>Comments</h3>
 
@@ -114,5 +154,8 @@
         </form>
     </div>
 {% endif %}
+</div>
+</div>
 
 {% endblock %}
+

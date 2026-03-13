@@ -44,22 +44,26 @@ def ride_joined_notification(sender, instance, created, **kwargs):
             )
 
 
+# REMOVING THIS SIGNAL FOR NOW TO AVOID ISSUES WITH DELETING RIDES
+# fix for the future: add the notification to the ride view
 
+# # signal to create notifications when a user leaves a ride
+# @receiver(post_delete, sender=Attendance)
+# def ride_left_notification(sender, instance, **kwargs):
 
-# signal to create notifications when a user leaves a ride
-@receiver(post_delete, sender=Attendance)
-def ride_left_notification(sender, instance, **kwargs):
+#     if not Ride.objects.filter(id=instance.ride_id).exists():
+#         return
 
-    ride_creator = instance.ride.user
-    leaving_user = instance.user
+#     ride_creator = instance.ride.user
+#     leaving_user = instance.user
 
-    if ride_creator != leaving_user:
-        Notification.objects.create(
-            recipient=ride_creator,
-            actor=leaving_user,
-            ride=instance.ride,
-            type=Notification.RIDE_LEFT
-        )
+#     if ride_creator != leaving_user:
+#         Notification.objects.create(
+#             recipient=ride_creator,
+#             actor=leaving_user,
+#             ride=instance.ride,
+#             type=Notification.RIDE_LEFT
+#         )
 
 
 
