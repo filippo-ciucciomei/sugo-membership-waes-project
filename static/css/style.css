@@ -64,3 +64,15 @@ a {
 .renew {
     margin: 8px;
 }
+
+/* .col-4 {
+    border: 1px solid black !important; 
+} */
+
+.ride-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #dbdbdb;
+}

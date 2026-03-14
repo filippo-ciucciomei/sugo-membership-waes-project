@@ -4,16 +4,21 @@
 
 <h1>Upcoming Rides</h1>
 
-{% if user.is_authenticated %}
     <a href="{% url 'create_ride' %}">
         <button>Create Ride</button>
     </a>
-{% endif %}
 
-<div class="ride-list">
+<div class="ride-list col-7">
+    <div class="row"> 
 
     {% for ride in rides %}
-    <div class="ride-card">
+    
+    <div class="col-4">
+        <div class="my-4">
+    <div id="ride-map" style="height: 200px;" class="rounded border"></div>
+</div>
+    </div>
+    <div class="col-8 ride-card">
 
         <h2 class="link">
             <a href="{% url 'ride_detail' ride.slug %}">
@@ -41,6 +46,7 @@
     {% empty %}
     <p>No upcoming rides available.</p>
     {% endfor %}
+    </div>
 
 </div>
 

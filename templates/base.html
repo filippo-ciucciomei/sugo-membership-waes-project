@@ -20,16 +20,19 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom p-3">
         <div class="container">
 
+
             <!-- LEFT SIDE -->
-            <div>
+            <div class="col-4">
                 {% if user.is_authenticated %}
                 <a class="nav-link d-inline" href="{% url 'account_logout' %}">Logout</a>
+
+
                 {% else %}
                 <a class="nav-link d-inline" href="{% url 'account_login' %}">Login</a>
                 |
@@ -38,38 +41,37 @@
             </div>
 
             <!-- CENTER LOGO -->
-            <a class="navbar-brand mx-auto fw-bold" href="/">SUGO</a>
+             <div class="col-4 text-center">
+            <a class="navbar-brand mx-auto fw-bold" href="/">
+                <img src="{% static 'images/logo.png' %}" alt="SUGO Logo" width="100" height="auto" class="d-inline-block align-text-center">
+            </a>
+            </div>
 
             <!-- RIGHT SIDE -->
-            <div>
+            <div class="col-4 text-end">
                 <a class="nav-link d-inline" href="/">Home</a>
                 |
                 <a class="nav-link d-inline" href="/rides">Rides</a>
-                |
+                
                 <!-- <i class="fa-solid fa-user mx-1"></i> -->
 
-
-                <!-- MEMBERSHIP -->
+                {% if user.is_authenticated %}
+                |
+                 <!-- MEMBERSHIP -->
 
                 <div class="dropdown d-inline">
 
-                    {% if user.is_authenticated %}
                     <a class="position-relative text-dark text-decoration-none mx-1" href="#" role="button" data-bs-toggle="dropdown">
-
                         <i class="fa-solid fa-user mx-1"></i>
 
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end" style="width:300px;">
-                      
                             <li class="dropdown-item small py-2 text-wrap">Your membership status: <strong>{{ user_membership_status }}</strong></li>
                             <li class="dropdown-item small py-2 text-wrap">Expiry date: <strong>{% if user_membership_expiry %}{{ user_membership_expiry|date:"M d, Y" }}{% else %}N/A{% endif %}</strong></li>
                             <li class="renew"> <a href="{% url 'membership_required' %}" class="btn btn-sm btn-secondary ms-2">Renew</a></li>
-
                     </ul>
-
                 </div>
-                {% endif %}
                 
 
                 <!-- NOTIFICATIONS -->
@@ -120,10 +122,12 @@
                                 View all notifications
                             </a>
                         </li>
-
                     </ul>
-
                 </div>
+
+                <!-- End of notifications -->
+                {% endif %}
+
 
             </div>
 
@@ -132,7 +136,7 @@
 
 
     <!-- PAGE CONTENT -->
-    <main class="container mt-5">
+    <main class="container mt-3 flex-grow-1">
 
         {% block content %}
         {% endblock %}
