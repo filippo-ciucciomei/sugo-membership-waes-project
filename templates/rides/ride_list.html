@@ -4,50 +4,64 @@
 
 <h1>Upcoming Rides</h1>
 
-    <a href="{% url 'create_ride' %}">
-        <button>Create Ride</button>
-    </a>
+<a href="{% url 'create_ride' %}">
+    <button>Create Ride</button>
+</a>
 
-<div class="ride-list col-7">
-    <div class="row"> 
-
+<div class="ride-list">
     {% for ride in rides %}
-    
-    <div class="col-4">
-        <div class="my-4">
-    <div id="ride-map" style="height: 200px;" class="rounded border"></div>
-</div>
-    </div>
-    <div class="col-8 ride-card">
+    <div class="row align-items-start mb-4">
 
-        <h2 class="link">
-            <a href="{% url 'ride_detail' ride.slug %}">
-                {{ ride.title }}
-            </a>
-        </h2>
-
-        <p>
-            <strong>Date:</strong> {{ ride.date }}<br>
-            <strong>Time:</strong> {{ ride.time }}<br>
-            <strong>Discipline:</strong> {{ ride.get_discipline_display }}<br>
-            <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
-        </p>
-
-        <p>
-            <strong>Created by:</strong>
-            {% if ride.user.first_name and ride.user.last_name %}
-            {{ ride.user.first_name }} {{ ride.user.last_name }}
+        <!-- GPX visualiser -->
+        <div class="col-md-4">
+            {% if ride.gpx_file %}
+            <div class="my-4">
+                <div
+                    class="ride-map rounded border"
+                    data-gpx-url="{{ ride.gpx_file.url }}"
+                    style="height: 200px; width: 100%;">
+                </div>
+            </div>
             {% else %}
-            {{ ride.user.username }}
+            <div class="my-4">
+                <div
+                    class="rounded border bg-light d-flex align-items-center justify-content-center"
+                    style="height: 200px; width: 100%;">
+                    <small class="text-muted">No GPX available</small>
+                </div>
+            </div>
             {% endif %}
-        </p>
+        </div>
+
+        <!-- RIDE Card -->
+        <div class="col-md-8 ride-card">
+            <h2 class="link">
+                <a href="{% url 'ride_detail' ride.slug %}">
+                    {{ ride.title }}
+                </a>
+            </h2>
+
+            <p>
+                <strong>Date:</strong> {{ ride.date }}<br>
+                <strong>Time:</strong> {{ ride.time }}<br>
+                <strong>Discipline:</strong> {{ ride.get_discipline_display }}<br>
+                <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
+            </p>
+
+            <p>
+                <strong>Created by:</strong>
+                {% if ride.user.first_name and ride.user.last_name %}
+                    {{ ride.user.first_name }} {{ ride.user.last_name }}
+                {% else %}
+                    {{ ride.user.username }}
+                {% endif %}
+            </p>
+        </div>
 
     </div>
     {% empty %}
     <p>No upcoming rides available.</p>
     {% endfor %}
-    </div>
-
 </div>
 
 {% endblock %}

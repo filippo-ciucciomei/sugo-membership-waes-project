@@ -76,3 +76,8 @@ a {
     margin-bottom: 20px;
     background-color: #dbdbdb;
 }
+
+.ride-map {
+    width: 100%;
+    min-height: 200px;
+}
