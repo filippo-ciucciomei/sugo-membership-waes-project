@@ -70,14 +70,12 @@ a {
 } */
 
 .ride-card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #dbdbdb;
 }
 
 .ride-map {
     width: 100%;
     min-height: 200px;
 }
+

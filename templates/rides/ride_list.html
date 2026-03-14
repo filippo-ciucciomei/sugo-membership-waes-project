@@ -2,66 +2,90 @@
 
 {% block content %}
 
-<h1>Upcoming Rides</h1>
+<div class="container mt-4">
 
-<a href="{% url 'create_ride' %}">
-    <button>Create Ride</button>
-</a>
+    <!-- Page header -->
+    
+    <div class="row d-flex justify-content-center"> 
+    <div class="col-md-9">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Upcoming Rides</h1>
 
-<div class="ride-list">
-    {% for ride in rides %}
-    <div class="row align-items-start mb-4">
-
-        <!-- GPX visualiser -->
-        <div class="col-md-4">
-            {% if ride.gpx_file %}
-            <div class="my-4">
-                <div
-                    class="ride-map rounded border"
-                    data-gpx-url="{{ ride.gpx_file.url }}"
-                    style="height: 200px; width: 100%;">
-                </div>
-            </div>
-            {% else %}
-            <div class="my-4">
-                <div
-                    class="rounded border bg-light d-flex align-items-center justify-content-center"
-                    style="height: 200px; width: 100%;">
-                    <small class="text-muted">No GPX available</small>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- RIDE Card -->
-        <div class="col-md-8 ride-card">
-            <h2 class="link">
-                <a href="{% url 'ride_detail' ride.slug %}">
-                    {{ ride.title }}
-                </a>
-            </h2>
-
-            <p>
-                <strong>Date:</strong> {{ ride.date }}<br>
-                <strong>Time:</strong> {{ ride.time }}<br>
-                <strong>Discipline:</strong> {{ ride.get_discipline_display }}<br>
-                <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
-            </p>
-
-            <p>
-                <strong>Created by:</strong>
-                {% if ride.user.first_name and ride.user.last_name %}
-                    {{ ride.user.first_name }} {{ ride.user.last_name }}
-                {% else %}
-                    {{ ride.user.username }}
-                {% endif %}
-            </p>
-        </div>
+        <a href="{% url 'create_ride' %}" class="btn btn-primary">
+            Create Ride
+        </a>
+    </div>
 
     </div>
+    </div>
+
+
+    {% for ride in rides %}
+
+    <div class="row d-flex justify-content-center"> 
+    <div class="col-md-9 ">
+
+    <div class="card mb-4 shadow-sm">
+        <div class="row g-0 align-items-center">
+
+            <!-- MAP -->
+            <div class="col-md-4">
+
+                {% if ride.gpx_file %}
+                <div
+                    class="ride-map rounded-start"
+                    data-gpx-url="{{ ride.gpx_file.url }}"
+                    style="height:220px;">
+                </div>
+                {% else %}
+                <div
+                    class="bg-light d-flex align-items-center justify-content-center"
+                    style="height:220px;">
+                    <small class="text-muted">No GPX available</small>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- RIDE INFO -->
+            <div class="col-md-8">
+                <div class="card-body">
+
+                    <h3 class="card-title">
+                        <a href="{% url 'ride_detail' ride.slug %}" class="text-decoration-none">
+                            {{ ride.title }}
+                        </a>
+                    </h3>
+
+                    <p class="mb-2">
+                        <strong>Date:</strong> {{ ride.date }} <br>
+                        <strong>Time:</strong> {{ ride.time }} <br>
+                        <strong>Discipline:</strong> {{ ride.get_discipline_display }} <br>
+                        <strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }}
+                    </p>
+
+                    <small class="text-muted">
+                        Created by
+                        {% if ride.user.first_name and ride.user.last_name %}
+                            {{ ride.user.first_name }} {{ ride.user.last_name }}
+                        {% else %}
+                            {{ ride.user.username }}
+                        {% endif %}
+                    </small>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>
+
     {% empty %}
-    <p>No upcoming rides available.</p>
+        <p>No upcoming rides available.</p>
     {% endfor %}
+
 </div>
 
 {% endblock %}
