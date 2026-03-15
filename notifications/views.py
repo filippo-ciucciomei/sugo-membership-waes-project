@@ -6,11 +6,13 @@ from .models import Notification
 
 
 
+
+
 # Create your views here.
 
 
 @login_required
-    # Mark all notifications as read for the current user
+def mark_notifications_read(request):
     Notification.objects.filter(
         recipient=request.user,
         is_read=False
@@ -18,9 +20,8 @@ from .models import Notification
     return JsonResponse({"success": True})
 
 
-
 @login_required
-    # Show a list of notifications for the current user
+def notifications_list(request):
     notifications = Notification.objects.filter(
         recipient=request.user
     )
