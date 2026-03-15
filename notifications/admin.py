@@ -1,12 +1,15 @@
+
 from django.contrib import admin
 from .models import Notification
 
 # Register your models here.
 
-# admin.site.register(Notification)
+# Admin panel settings for Notification
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
+    # Show these fields in the list view
     list_display = ("recipient", "actor", "ride", "type", "is_read", "created_at")
+    # Add filters for type, read status, date, and recipient
     list_filter = ("type", "is_read", "created_at", "recipient")
 
 

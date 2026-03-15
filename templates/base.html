@@ -29,9 +29,9 @@
 
             <!-- LEFT SIDE -->
             <div class="col-4">
+                
                 {% if user.is_authenticated %}
                 <a class="nav-link d-inline" href="{% url 'account_logout' %}">Logout</a>
-
 
                 {% else %}
                 <a class="nav-link d-inline" href="{% url 'account_login' %}">Login</a>
@@ -49,8 +49,7 @@
 
             <!-- RIGHT SIDE -->
             <div class="col-4 text-end">
-                <a class="nav-link d-inline" href="/">Home</a>
-                |
+                
                 <a class="nav-link d-inline" href="/rides">Rides</a>
                 
                 <!-- <i class="fa-solid fa-user mx-1"></i> -->

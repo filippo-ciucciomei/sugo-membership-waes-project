@@ -10,23 +10,20 @@ from .models import Notification
 
 
 @login_required
-def mark_notifications_read(request):
+    # Mark all notifications as read for the current user
     Notification.objects.filter(
         recipient=request.user,
         is_read=False
     ).update(is_read=True)
-
     return JsonResponse({"success": True})
 
 
 
 @login_required
-def notifications_list(request):
-
+    # Show a list of notifications for the current user
     notifications = Notification.objects.filter(
         recipient=request.user
     )
-
     return render(
         request,
         "notifications/notifications_list.html",

@@ -1,3 +1,5 @@
+
+# Import necessary Django modules for handling HTTP requests, rendering templates, and managing user sessions
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -6,34 +8,45 @@ from django.views.decorators.http import require_GET
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
+
+# Import models for membership plans and purchases
 from .models import MembershipPlan, MembershipPurchase
 
+
+# Import Stripe for payment processing
 import stripe
 
 
+
+# Set the Stripe API key from Django settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-#Create your views here.
 
-# Helper function to check if a user has an active membership by querying the MembershipPurchase model for any records with an expiry date in the future.
+# Create your views here.
+
+
+# Check if a user has an active membership (not expired)
 def user_has_active_membership(user):
     if not user.is_authenticated:
         return False
-
+    # Look for any membership purchases that have not expired
     return MembershipPurchase.objects.filter(
         user=user,
         expiry_date__gte=timezone.now().date()
     ).exists()
 
-# View to check if the user has an active membership and display appropriate messages and options for purchasing or renewing a membership plan.
+
+# Show a page explaining membership status and options
 def membership_required(request):
     if not request.user.is_authenticated:
         return redirect("account_login")
 
+    # Get all purchases for this user
     purchases = MembershipPurchase.objects.filter(user=request.user).order_by("-created_at")
     has_active = purchases.filter(expiry_date__gte=timezone.now().date()).exists()
     has_previous = purchases.exists()
 
+    # Decide what message and button to show
     if has_active:
         button_text = None
         message = "Your membership is already active."
@@ -53,19 +66,20 @@ def membership_required(request):
 
     return render(request, "membership/membership_required.html", context)
 
-# View to create a Stripe checkout session for purchasing or renewing a membership plan. 
-# It checks if the user is authenticated and if there is an active membership plan available, 
-# then creates a checkout session with the plan details and redirects the user to the Stripe checkout page.
+
+# Create a Stripe checkout session for buying or renewing membership
 @require_GET
 def create_checkout_session(request):
     if not request.user.is_authenticated:
         return redirect("account_login")
 
+    # Get the first active membership plan
     plan = MembershipPlan.objects.filter(is_active=True).first()
 
     if not plan:
         return JsonResponse({"error": "No active membership plan found."}, status=400)
 
+    # Create a Stripe checkout session with plan details
     session = stripe.checkout.Session.create(
         ui_mode="embedded",
         payment_method_types=["card"],
@@ -94,13 +108,16 @@ def create_checkout_session(request):
 
 
 
-# redirect to the success page after successful checkout
+
+# Show the success page after payment
 def membership_success(request):
     return render(request, "membership/membership_success.html")
 
+# Show the cancel page if payment is cancelled
 def membership_cancel(request):
     return render(request, "membership/membership_cancel.html")
 
+# Show the Stripe checkout page
 def membership_checkout_page(request):
     if not request.user.is_authenticated:
         return redirect("account_login")
@@ -111,9 +128,8 @@ def membership_checkout_page(request):
         {"STRIPE_PUBLISHABLE_KEY": settings.STRIPE_PUBLISHABLE_KEY}
     )
 
-# View to handle post-login redirection based on the user's membership status. 
-# If the user has an active membership, they are redirected to the home page; 
-# otherwise, they are redirected to the membership required page.
+
+# After login, send user to the right page based on membership status
 class PostLoginRedirectView(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -123,20 +139,23 @@ class PostLoginRedirectView(View):
             return redirect("home")
 
         return redirect("membership_required")
-    
 
+
+# Handle Stripe webhook events (like payment completed)
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
 
     try:
+        # Verify the event is from Stripe
         event = stripe.Webhook.construct_event(
             payload,
             sig_header,
             settings.STRIPE_WEBHOOK_SECRET
         )
 
+        # If payment is completed, create a new membership purchase
         if event["type"] == "checkout.session.completed":
             session = event["data"]["object"]
 
@@ -158,10 +177,13 @@ def stripe_webhook(request):
         return HttpResponse(status=200)
 
     except ValueError:
+        # Invalid payload
         return HttpResponse(status=400)
 
     except stripe.error.SignatureVerificationError:
+        # Invalid signature
         return HttpResponse(status=400)
 
     except Exception:
+        # Other errors
         return HttpResponse(status=500)

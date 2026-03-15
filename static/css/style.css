@@ -29,15 +29,16 @@ footer i:hover {
 }
 
 .home-hero {
-    min-height: 70vh;
+    /* min-height: 70vh; */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: start; */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* border: 1px solid pink; */ /* for testing */
 }
 
-.home-intro {
-    max-width: 700px;
-}
+
 
 a {
     color: #000000;
@@ -79,3 +80,25 @@ a {
     min-height: 200px;
 }
 
+
+.hero-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 95%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.hero-row {
+    min-height: 80vh;
+    border: 1px solid white;
+}
+
+@media (max-width: 768px) {
+
+  .navbar .dropdown i {
+    font-size: 18px;
+  }
+
+}

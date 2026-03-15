@@ -1,35 +1,85 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<section class="home-hero text-center py-5">
-    <h1 class="display-3 mb-4">Welcome to SUGO</h1>
 
-    <div class="mx-auto home-intro">
-        <p class="lead">
-            SUGO is a cycling club for riders who want to organise rides,
-            join events, and share the details of each route with the community.
-        </p>
+<!-- HERO VIDEO -->
+<section class="hero-video">
 
+    <video autoplay muted loop playsinline class="hero-video-bg">
+        <source src="{% static 'videos/hero-video.mp4' %}" type="video/mp4">
+    </video>
+
+
+    <div class="row hero-row justify-content-space-between  h-100"> 
+    
+        <!-- left column -->
+    <div class="col-8 text-start">
+
+        <h1 class="display-4 text-white mb-1">Welcome to SUGO!</h1>
+        <h2 class="display-7 text-white">The fastest club of London</h2>
+
+        
+
+    </div>
+
+    <!-- right column -->
+    <div class="col-4 align-self-end text-end">
+
+        <a href="/rides" class="btn btn-light btn-lg mt-4 mb-2">
+            About us
+        </a>
+
+        <br>
 
         {% if user.is_authenticated %}
-
-        <h1>
-            <a href="/rides">Explore Rides</a>
-        </h1>
+        <a href="/rides" class="btn btn-light btn-lg mb-2">
+            Explore Rides
+        </a>
 
         {% else %}
+
+        <a href="{% url 'account_signup' %}" class="btn btn-light btn-lg">
+            Join the Club
+        </a>
+
+        {% endif %}
+        
+    </div>
+
+
+    <!-- row end -->
+    </div>
+
+</section>
+
+
+<!-- INTRO TEXT -->
+<section class="home-hero text-start py-5">
+
+    <div class="mx-auto">
+
+        <p class="lead">
+            Sugo is a London-based cycling club founded in 2021 by a group of riders who couldn’t quite find the right fit in existing clubs. We built the club around a shared mindset: riding fast, pushing each other, and becoming stronger cyclists together.
+            <br>
+            <strong><u>We ride every week in Regent’s Park on Tuesdays and Fridays at 7:00am</u></strong> (weather permitting — dry roads and above 0°C). On most weekends we organise longer rides outside the city.
+            <br>
+            You’re welcome to join us for a weekday Regent’s Park ride to get a feel for the group. If you enjoy riding with us, you can purchase a club membership to access all our weekend rides and the full Sugo calendar.
+            <br>
+            We look forward to seeing you out on the road.
+        </p>
+
+        {% if not user.is_authenticated %}
 
         <p>
             Join the club to access members-only rides, create your own events,
             and take part in the conversation.
         </p>
 
-        <button class="btn btn-dark btn-lg mt-3">
-            <a href="{% url 'account_signup' %}" class="text-white">Join Us</a>
-        </button>
-
         {% endif %}
-        
+
     </div>
+
 </section>
+
 {% endblock %}

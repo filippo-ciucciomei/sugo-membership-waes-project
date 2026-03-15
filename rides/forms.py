@@ -2,11 +2,11 @@ from django import forms
 from .models import Ride
 from .models import Comment
 
-
-
+# Form for creating and editing rides
 class RideForm(forms.ModelForm):
     class Meta:
         model = Ride
+        # Fields to show in the form
         fields = [
             "title",
             "description",
@@ -16,6 +16,7 @@ class RideForm(forms.ModelForm):
             "discipline",
             "gpx_file",
         ]
+        # Use special widgets for date and time fields
         widgets = {
             "date": forms.DateInput(attrs={"type": "date"}),
             "time": forms.TimeInput(attrs={"type": "time"}),
@@ -26,6 +27,7 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ["content"]
+        # Use a textarea for the comment content
         widgets = {
             "content": forms.Textarea(attrs={
                 "class": "form-control",
