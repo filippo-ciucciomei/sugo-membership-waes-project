@@ -66,9 +66,7 @@ a {
     margin: 8px;
 }
 
-/* .col-4 {
-    border: 1px solid black !important; 
-} */
+
 
 .ride-card {
     padding: 15px;
@@ -91,9 +89,15 @@ a {
 }
 
 .hero-row {
-    min-height: 70vh;
+    min-height: 80vh;
     border: 1px solid white;
     padding-bottom: 20px;
+}
+
+#about-sugo {
+    background-color: #f8f9fa;
+    width: 100vw !important;
+    padding: 10px;
 }
 
 @media (max-width: 768px) {
@@ -101,6 +105,13 @@ a {
   .navbar .dropdown i {
     font-size: 18px;
   }
+
+  .hero-row {
+    min-height: 70vh;
+    border: 1px solid white;
+    padding-bottom: 20px;
+    margin: 10px;
+}
 
   /* .hero-row {
     min-height: 65vh;
