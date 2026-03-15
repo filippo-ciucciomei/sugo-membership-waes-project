@@ -96,7 +96,7 @@ a {
 
 #about-sugo {
     background-color: #f8f9fa;
-    width: 100vw !important;
+    /* width: 100vw !important; */
     padding: 10px;
 }
 
