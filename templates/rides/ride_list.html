@@ -10,7 +10,7 @@
     <div class="col-md-9">
     
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Upcoming Rides</h1>
+        <h1 id="upcoming-rides" class="mb-0">Upcoming Rides</h1>
 
         <a href="{% url 'create_ride' %}" class="btn btn-primary">
             Create Ride
@@ -26,6 +26,8 @@
     <div class="row d-flex justify-content-center"> 
     <div class="col-md-9 ">
 
+
+        <a href="{% url 'ride_detail' ride.slug %}" class="ride-card-link">
     <div class="card mb-4 shadow-sm">
         <!-- here -->
         <div class="row g-0 align-items-center">
@@ -36,13 +38,11 @@
                 {% if ride.gpx_file %}
                 <div
                     class="ride-map rounded-start"
-                    data-gpx-url="{{ ride.gpx_file.url }}"
-                    style="height:220px;">
+                    data-gpx-url="{{ ride.gpx_file.url }}">
                 </div>
                 {% else %}
                 <div
-                    class="bg-light d-flex align-items-center justify-content-center"
-                    style="height:220px;">
+                    class="ride-map bg-light d-flex align-items-center justify-content-center rounded-start">
                     <small class="text-muted">No GPX available</small>
                 </div>
                 {% endif %}
@@ -55,9 +55,7 @@
                 <div class="card-body">
 
                     <h3 class="card-title">
-                        <a href="{% url 'ride_detail' ride.slug %}" class="text-decoration-none">
                             {{ ride.title }}
-                        </a>
                     </h3>
 
                     <p class="mb-2">
@@ -82,6 +80,7 @@
         </div>
         <!-- here -->
     </div>
+    </a>
     </div>
     </div>
 

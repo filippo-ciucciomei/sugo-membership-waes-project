@@ -65,6 +65,7 @@
         <strong>Distance:</strong> <span id="ride-distance"></span> km </div>
     <div>
         <strong>Elevation gain:</strong> <span id="ride-elevation"></span> m</div>
+        
     {% endif %}
     <div><strong>Riders:</strong> {{ ride.attendances.count }} / {{ ride.max_riders }} (
         {% for attendance in ride.attendances.all %}
@@ -101,7 +102,7 @@
 <!-- Route Map and Profile GPX Visualiser -->
 {% if ride.gpx_file %}
 <div class="my-4">
-    <div id="ride-map" style="height: 400px;" class="rounded border"></div>
+    <div id="ride-map" class="gpx-preview rounded border"></div>
 </div>
 
 <div id="elevation-chart-container" class="my-4" >
@@ -109,6 +110,15 @@
 </div>
 
 {{ ride.gpx_file.url|json_script:"gpx-url" }}
+
+{% else %}
+<!-- if no GPX file -->
+    <div class="my-4">
+    <div id="no-gpx" class="rounded border">No GPX available</div>
+</div>
+
+
+
 {% endif %}
 </div>
 
