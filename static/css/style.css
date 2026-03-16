@@ -35,7 +35,8 @@ footer i:hover {
     /* justify-content: start; */
     margin-top: 20px;
     margin-bottom: 20px;
-    /* border: 1px solid pink; */ /* for testing */
+    /* border: 1px solid pink; */
+    /* for testing */
 }
 
 
@@ -53,12 +54,12 @@ a {
 }
 
 .delete-edit:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 #elevation-chart-container {
-    position: relative; 
-    height: 200px; 
+    position: relative;
+    height: 200px;
     width: 100%;
 }
 
@@ -107,32 +108,57 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  .gpx-preview {
+.gpx-preview {
     height: 400px;
-  }
+}
 
-  #upcoming-rides {
+#upcoming-rides {
     font-size: 2.2rem;
-  }
+}
+
+
+/* signup buttons styles */
+.btn-strava {
+    background-color: #fc4c02 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-strava:hover {
+    background-color: #e64500 !important;
+    color: white !important;
+}
+
+.btn-google {
+    background-color: white !important;
+    color: #444 !important;
+    border: 1px solid #ddd !important  ;
+}
+
+.btn-google:hover {
+    background-color: #f7f7f7 !important;
+}
+
+/* end of signup buttons styles */
 
 @media (max-width: 768px) {
 
-  .navbar .dropdown i {
-    font-size: 18px;
-  }
+    .navbar .dropdown i {
+        font-size: 18px;
+    }
 
-  
 
-  .hero-row {
-    min-height: 70vh;
-    border: 1px solid white;
-    padding-bottom: 20px;
-    margin: 10px;
-}
 
-  /* .hero-row {
+    .hero-row {
+        min-height: 70vh;
+        border: 1px solid white;
+        padding-bottom: 20px;
+        margin: 10px;
+    }
+
+    /* .hero-row {
     min-height: 65vh;
     border: 1px solid white;
 } */

@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% load socialaccount %}
+
+
 {% block content %}
 <section class="container py-5">
     <div class="row justify-content-center">
@@ -13,6 +16,33 @@
                     <button type="submit" class="btn btn-dark">Create Account</button>
                 </div>
             </form>
+
+            <p class="mt-4 text-center">Or sign up with:</p>
+
+            <div class="mt-3 d-flex flex justify-content-center gap-3">
+
+                <!-- signup button Google/Strava -->
+                <div class="d-grid gap-3 mb-4">
+
+                    <form method="post" action="{% provider_login_url 'strava' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-strava w-100">
+                            <i class="fa-brands fa-strava me-2"></i>
+                            Continue with Strava
+                        </button>
+                    </form>
+
+                    <form method="post" action="{% provider_login_url 'google' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-google w-100">
+                            <i class="fa-brands fa-google me-2"></i>
+                            Continue with Google
+                        </button>
+                    </form>
+
+                </div>
+                <!-- End of buttons -->
+            </div>
 
             <p class="mt-3 text-center">
                 Already have an account?
