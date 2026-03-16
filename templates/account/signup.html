@@ -7,35 +7,39 @@
 <section class="container py-5">
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-5">
-            <h1 class="mb-4 text-center">Sign Up</h1>
+            <h1 class="mb-4 text-center">Sign Up to Sugo</h1>
+
+            <p class="text-center text-muted mb-4">
+                Sign up to <strong>Sugo Cycling Club</strong>.
+                Social login will redirect you to the official Google or Strava authentication page.
+            </p>
+
+
+            <!-- signup button Google/Strava -->
+            <div class="d-grid gap-3 mb-4">
+
+                <form method="post" action="{% provider_login_url 'strava' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-strava w-100">
+                        <i class="fa-brands fa-strava me-2"></i>
+                        Sign up with Strava
+                    </button>
+                </form>
+
+                <form method="post" action="{% provider_login_url 'google' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-google w-100">
+                        <i class="fa-brands fa-google me-2"></i>
+                        Sign up with Google
+                    </button>
+                </form>
+
+            </div>
+            <!-- End of buttons -->
 
 
 
-                <!-- signup button Google/Strava -->
-                <div class="d-grid gap-3 mb-4">
 
-                    <form method="post" action="{% provider_login_url 'strava' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-strava w-100">
-                            <i class="fa-brands fa-strava me-2"></i>
-                            Continue with Strava
-                        </button>
-                    </form>
-
-                    <form method="post" action="{% provider_login_url 'google' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-google w-100">
-                            <i class="fa-brands fa-google me-2"></i>
-                            Continue with Google
-                        </button>
-                    </form>
-
-                </div>
-                <!-- End of buttons -->
-
-
-
-            
             <p class="mt-4 text-center">Or sign up with your email:</p>
 
             <form method="post">
@@ -49,7 +53,7 @@
 
             <!-- <div class="mt-3 d-flex flex justify-content-center gap-3"> -->
 
-                
+
             <!-- </div> -->
 
             <p class="mt-3 text-center">
