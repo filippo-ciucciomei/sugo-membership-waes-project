@@ -65,14 +65,14 @@
             <strong><u>We ride every week in Regent’s Park on Tuesdays and Fridays at 7:00am</u></strong> (weather permitting — dry roads and above 0°C). On most weekends we organise longer rides outside the city.
             <br>
             You’re welcome to join us for a weekday Regent’s Park ride to get a feel for the group. If you enjoy riding with us, you can purchase a club membership to access all our weekend rides and the full Sugo calendar.
-            <br>
+            <br><br>
             We look forward to seeing you out on the road.
         </p>
 
         {% if not user.is_authenticated %}
 
         <p class="lead">
-            Join the club to access members-only rides, create your own events,
+            <a href="{% url 'account_signup' %}"><strong>Join the club</strong></a> to access members-only rides, create your own events,
             and take part in the conversation.
         </p>
 
