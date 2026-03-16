@@ -1,3 +1,4 @@
+# rides/views.py
 
 # Import Django modules for handling HTTP requests, rendering templates, and working with class-based views
 from django.http import JsonResponse

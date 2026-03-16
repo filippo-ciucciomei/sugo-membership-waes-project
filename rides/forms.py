@@ -1,3 +1,5 @@
+# rides/forms.py
+
 from django import forms
 from .models import Ride
 from .models import Comment

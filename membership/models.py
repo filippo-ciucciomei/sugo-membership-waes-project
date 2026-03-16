@@ -1,3 +1,5 @@
+# membership/models.py
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -30,7 +32,7 @@ class MembershipPurchase(models.Model):
         on_delete=models.PROTECT,
         related_name="purchases"
     )
-    start_date = models.DateField(default=timezone.now)
+    start_date = models.DateField(default=timezone.localdate)
     expiry_date = models.DateField(blank=True, null=True)
     price_paid = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,3 +1,5 @@
+# membership/context_processors.py
+
 from django.utils import timezone
 from membership.models import MembershipPurchase
 

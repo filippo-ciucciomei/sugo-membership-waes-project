@@ -1,3 +1,5 @@
+# sugo/urls.py
+
 """
 URL configuration for sugo project.
 

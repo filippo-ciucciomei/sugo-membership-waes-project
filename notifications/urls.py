@@ -1,3 +1,5 @@
+# notifications/urls.py
+
 from django.urls import path
 from .views import mark_notifications_read
 from .views import notifications_list

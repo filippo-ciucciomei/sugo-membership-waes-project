@@ -1,3 +1,5 @@
+# notifications/models.py
+
 from django.db import models
 from django.conf import settings
 from rides.models import Ride

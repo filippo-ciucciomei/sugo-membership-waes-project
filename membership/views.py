@@ -1,4 +1,6 @@
 
+# membership/views.py
+
 # Import necessary Django modules for handling HTTP requests, rendering templates, and managing user sessions
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect

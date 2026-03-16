@@ -1,3 +1,5 @@
+# rides/models.py
+
 from django.conf import settings
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -57,11 +59,12 @@ class Ride(models.Model):
         return f"{self.title} - {self.date}"
 
     def save(self, *args, **kwargs):
-        # Automatically generate a slug if not set
         if not self.slug:
-            super().save(*args, **kwargs)  # first save to get ID
+            super().save(*args, **kwargs)
             self.slug = f"{slugify(self.title)}-{self.id}"
-        super().save(*args, **kwargs)
+            kwargs.pop("force_insert", None)
+            return super().save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
 
 

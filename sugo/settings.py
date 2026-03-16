@@ -1,3 +1,5 @@
+# sugo/settings.py
+
 """
 Django settings for sugo project.
 
@@ -216,5 +218,18 @@ if USE_S3:
         },
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
+    # Use simpler static storage during tests
+import sys
+
+if 'test' in sys.argv:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
