@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <h1 class="mb-4 text-center">Complete Your Sign Up</h1>
+
+            <p class="text-muted text-center mb-4">
+                You are about to use your social account to log in to
+                <strong>Sugo Cycling Club</strong>.
+                As a final step, please complete the form below.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Email</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Username</label>
+                    {{ form.username }}
+                </div>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Please check the form and try again.
+                    </div>
+                {% endif %}
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-dark">
+                        Sign Up
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

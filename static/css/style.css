@@ -141,6 +141,12 @@ a {
     background-color: #f7f7f7 !important;
 }
 
+.btn-strava,
+.btn-google {
+    padding: 0.7rem 1rem;
+    font-weight: 500;
+}
+
 /* end of signup buttons styles */
 
 @media (max-width: 768px) {
