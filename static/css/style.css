@@ -154,6 +154,11 @@ a {
     font-weight: 500;
 }
 
+#small-h3 {
+    font-size: 1.7rem;
+    font-weight: 500;
+}
+
 
 
 @media (max-width: 768px) {

@@ -158,7 +158,7 @@
 
 {% if user.is_authenticated %}
     <div class="mt-4">
-        <h4>Leave a comment</h4>
+        <h3 id="small-h3">Leave a comment</h3>
         <form method="post">
             {% csrf_token %}
             {{ comment_form.as_p }}
