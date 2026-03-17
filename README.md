@@ -30,6 +30,7 @@ The project was built using Django and deployed on Heroku, with AWS S3 used for 
 9. [Deployment](#deployment)  
 10. [Challenges Faced](#challenges-faced)  
 11. [Future Improvements](#future-improvements)  
+12. [Ai Usage](#ai-usage)
 12. [Credits](#credits)
 
 ---
@@ -380,3 +381,182 @@ The validator confirmed that the stylesheet contains no syntax errors and compli
 
 Result:  
 No CSS errors were found.
+
+
+# Challenges Faced
+
+During development several technical challenges were encountered. These challenges required debugging, research, and adjustments to both the application code and configuration.
+
+---
+
+## Google OAuth Security Warning
+
+One of the main challenges encountered was related to **Google OAuth authentication**.
+
+The application uses **django-allauth** to allow users to sign in using their Google account. While the implementation was technically correct and the authentication flow worked as expected, Google initially flagged the application as **"suspicious"** during the OAuth verification process.
+
+This warning appeared because Google's automated security checks interpreted the wording on the login page as potentially misleading, even though the code itself was functioning correctly.
+
+### Resolution
+
+To resolve the issue:
+
+- The login page text was rewritten to clearly explain that users would be redirected to **Google's official authentication page**.
+- The wording was simplified to avoid triggering automated security filters.
+- A verification request was submitted through Google's OAuth review process.
+
+After these changes, the application passed the review and the warning was removed.
+
+---
+
+## Static Files and Deployment Differences
+
+Another challenge occurred when running tests locally while using **Whitenoise static file storage**.
+
+The project uses **CompressedManifestStaticFilesStorage** in production, which expects all static assets to exist in the collected static files manifest. During automated testing, Django attempted to load certain static assets that were not included in the manifest, causing errors.
+
+### Resolution
+
+The issue was solved by overriding the static file storage configuration in the test settings so that Django uses the standard static file storage during testing.
+
+This allowed the test environment to run without requiring the full static file manifest used in production.
+
+---
+
+## Test Database Behaviour
+
+When writing automated tests, it was important to understand how Django handles test databases.
+
+Running the test suite automatically:
+
+- creates a temporary database
+- runs all test cases
+- deletes the database afterwards
+
+This behaviour ensures tests are **isolated and do not affect the real database**, but required careful setup of test data within the `setUp()` method to ensure all required objects existed before each test ran.
+
+
+# Future Improvements
+
+While the current version of the application provides the core functionality required to organise and manage club rides, several additional features could further enhance the user experience and expand the platform.
+
+Potential future improvements include:
+
+### User Profiles
+Allow users to create a personal profile including:
+
+- profile picture
+- cycling preferences
+- short bio
+- personal ride statistics
+
+This would help strengthen the community aspect of the platform.
+
+---
+
+### Ride Difficulty Rating
+
+Introduce a difficulty rating system for rides based on factors such as:
+
+- distance
+- elevation gain
+- average speed
+
+This would help riders quickly understand whether a ride suits their level.
+
+---
+
+### Advanced Ride Filtering
+
+Add filtering options on the ride list page to allow users to filter rides by:
+
+- discipline (road / gravel)
+- distance
+- elevation
+- date
+
+This would make it easier for members to find rides that match their preferences.
+
+---
+
+### Calendar Integration
+
+Provide a calendar view of upcoming rides and allow users to export rides to external calendars such as:
+
+- Google Calendar
+- Apple Calendar
+- Outlook
+
+---
+
+### Improved Notification System
+
+Enhance the notification system with:
+
+- read/unread indicators
+- email notifications
+- real-time updates using WebSockets
+
+---
+
+### Enhanced GPX Analytics
+
+Extend GPX data analysis to include:
+
+- average gradient
+- climb detection
+- estimated ride duration
+- ride difficulty calculation
+
+---
+
+# AI Usage
+
+Artificial intelligence tools were used during the development of this project to assist with learning, debugging, and documentation.
+
+AI assistance was used for:
+
+- understanding Django testing practices
+- troubleshooting errors during development
+- generating ideas for application architecture
+- improving documentation clarity
+- refining README structure and explanations
+
+All code generated with the assistance of AI was reviewed, tested, and adapted to fit the requirements of the project.
+
+AI tools were used as a **learning aid and productivity tool**, while the final implementation and debugging decisions were made by the developer.
+
+---
+
+# Credits
+
+## Technologies and Libraries
+
+The following technologies and open-source libraries were used in the development of this project:
+
+- **Django** – backend web framework
+- **Bootstrap** – responsive frontend layout
+- **Leaflet.js** – interactive maps
+- **Chart.js** – elevation chart visualisation
+- **django-allauth** – authentication and social login
+- **PostgreSQL** – relational database
+- **AWS S3** – media file storage
+- **Heroku** – application deployment platform
+
+---
+
+## Development Tools
+
+- **Visual Studio Code** – development environment
+- **Git & GitHub** – version control
+- **W3C Validators** – HTML and CSS validation
+- **Google Lighthouse** – performance and accessibility testing
+
+---
+
+
+This project was developed by **Filippo Ciucciomei** as part of the Codeinstitute full-stack web development Bootcamp. Inspiration was drawn from real-world cycling club organisation platforms and community ride management tools.
+
+Special thanks to the open-source community and documentation resources that made this project possible.
+
+
