@@ -35,8 +35,8 @@
     {% if already_joined %}
 
     <p>
-       <a href="{% url 'leave_ride' ride.slug %}">
-           <button type="button">Leave Ride</button>
+       <a href="{% url 'leave_ride' ride.slug %}" class="btn btn-primary">
+           Leave Ride
        </a>
     </p>
 
@@ -47,8 +47,8 @@
     {% else %}
 
     <p>
-        <a href="{% url 'join_ride' ride.slug %}">
-            <button type="button">Join Ride</button>
+        <a href="{% url 'join_ride' ride.slug %}" class="btn btn-primary">
+            Join Ride
         </a>
     </p>
 
@@ -56,7 +56,7 @@
 
 {% endif %}
 
-<p>
+<div class="mb-3">
    <div><strong>Date:</strong> {{ ride.date }} </div> 
     <div><strong>Time:</strong> {{ ride.time }} </div>
     <div><strong>Discipline:</strong> {{ ride.discipline }} </div>
@@ -73,7 +73,7 @@
         {% endfor %})
     
     </div>
-</p>
+</div>
 
 
 
@@ -81,7 +81,7 @@
 
 <p class="mb-3">
     <strong>Description:</strong><br>
-    {{ ride.description }}
+    {{ ride.description|default:"No description provided." }}
 </p>
 
 
@@ -90,9 +90,9 @@
 
 {% if ride.gpx_file %}
 
-<button class="btn btn-primary mt-3">
-    <a href="{{ ride.gpx_file.url }}" class="text-white" download>Download GPX</a>
-</button>
+
+    <a href="{{ ride.gpx_file.url }}" class="text-white btn btn-secondary">Download GPX</a>
+
 
 {% endif %}
 
@@ -126,7 +126,7 @@
 
 <div class="col-md-4">
 
-<h3>Comments</h3>
+<h2>Comments</h2>
 
 {% if comments %}
     {% for comment in comments %}
