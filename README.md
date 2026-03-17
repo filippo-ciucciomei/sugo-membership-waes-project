@@ -1,7 +1,7 @@
 # SUGO Cycling Club
 
 🚴 **Live Application:**  
-https://YOUR-APP.herokuapp.com
+https://sugo-membership-c0b204760e50.herokuapp.com/
 
 SUGO is a full-stack web application that allows members of a cycling club to organise rides, join events, and share route information with the community. The platform enables users to create rides, upload GPX routes, view route maps, interact through comments, and receive notifications about activity on rides.
 
