@@ -1,26 +1,36 @@
 # SUGO Cycling Club
 
+🚴 **Live Application:**  
+https://YOUR-APP.herokuapp.com
+
 SUGO is a full-stack web application that allows members of a cycling club to organise rides, join events, and share route information with the community. The platform enables users to create rides, upload GPX routes, view route maps, interact through comments, and receive notifications about activity on rides.
 
 The project was built using Django and deployed on Heroku, with AWS S3 used for media storage. It focuses on community-driven ride organisation and clear route visualisation.
 
-INSERT SCREENSHOT HERE!!!
+### Homepage Mockup
+![Home Mockup](readme-files/mockups/home%20mockup.png)
+
+### Ride Page Mockup
+![Ride Mockup](readme-files/mockups/ride%20mockup.png)
+
+---
 
 ---
 
 # Table of Contents
 
-1. [Project Overview](#project-overview)
-2. [User Experience (UX)](#user-experience)
-3. [User Stories](#user-stories)
-4. [Design](#design)
-5. [Database Design](#database-design)
-6. [Features](#features)
-7. [Technologies Used](#technologies-used)
-8. [Testing](#testing)
-9. [Deployment](#deployment)
-10. [Future Improvements](#future-improvements)
-11. [Credits](#credits)
+1. [Project Overview](#project-overview)  
+2. [User Experience (UX)](#user-experience)  
+3. [User Stories](#user-stories)  
+4. [Design](#design)  
+5. [Database Design](#database-design)  
+6. [Features](#features)  
+7. [Technologies Used](#technologies-used)  
+8. [Testing](#testing)  
+9. [Deployment](#deployment)  
+10. [Challenges Faced](#challenges-faced)  
+11. [Future Improvements](#future-improvements)  
+12. [Credits](#credits)
 
 ---
 
@@ -92,16 +102,18 @@ Key design goals:
 
 # Design
 
-## Layout
+## Wireframes
 
-The interface uses a clean layout with:
+Wireframes were created to plan the responsive layout of the application before development.
 
-- centered content columns
-- ride cards with route previews
-- simple navigation bar
-- responsive Bootstrap grid system
+### Laptop
+![Laptop Wireframes](readme-files/wireframes/Wireframes%20Laptop.png)
 
-INSERT WIREFRAMES HERE!!!
+### Tablet
+![Tablet Wireframes](readme-files/wireframes/Wireframes%20Tablet.png)
+
+### Mobile
+![Mobile Wireframes](readme-files/wireframes/Wireframes%20Mobile.png)
 
 ---
 
@@ -114,37 +126,6 @@ The navigation bar includes:
 - ride list
 - user profile menu
 - notification dropdown
-
----
-
-## Ride List Page
-
-Each ride is displayed as a card showing:
-
-- route preview map
-- ride title
-- date and time
-- discipline
-- number of riders
-- ride creator
-
-Cards are fully clickable for quick navigation.
-
-INSERT SCREENSHOT HERE!!!
-
----
-
-## Ride Detail Page
-
-The ride detail page displays:
-
-- ride information
-- interactive route map
-- elevation chart
-- GPX download
-- comments section
-
-INSERT SCREENSHOT HERE!!!
 
 ---
 
@@ -177,8 +158,6 @@ Allows users to comment on rides.
 ### Notification
 Stores activity notifications related to rides.
 
-INSERT ERD HERE!!!
-
 ---
 
 # Features
@@ -191,7 +170,7 @@ Users can:
 - log in
 - log out
 
-Authentication is handled using Django authentication.
+Authentication is handled using Django authentication and social login through Google and Strava.
 
 ---
 
@@ -220,6 +199,8 @@ Features include:
 - distance calculation
 - elevation gain calculation
 - elevation profile chart
+
+Libraries used include **Leaflet.js** and **Chart.js**.
 
 ---
 
@@ -283,71 +264,118 @@ Notifications appear in a dropdown menu in the navigation bar.
 
 ---
 
-# Testing
+# Automated Backend Testing (Python / Django)
 
-Testing was performed throughout development to ensure the application behaves as expected.
+Automated tests were implemented using Django’s built-in testing framework. These tests simulate user interactions and verify that views, models, and database operations behave correctly.
 
-Testing included:
+The Django test suite was executed using the following command:
 
-- manual feature testing
-- user flow testing
-- database integrity checks
-- form validation testing
-- deployment testing
+`python manage.py test`
 
-INSERT TESTING TABLE HERE!!!
+This command automatically:
 
----
+- creates a temporary test database
+- runs all test cases
+- destroys the test database after completion
 
-# Deployment
-
-The project is deployed on Heroku.
-
-## Deployment Steps
-
-1. Create a Heroku application.
-2. Configure environment variables.
-3. Connect the GitHub repository.
-4. Configure PostgreSQL database.
-5. Configure AWS S3 for media storage.
-6. Run migrations.
-7. Deploy the application.
-
-INSERT DEPLOYMENT SCREENSHOT HERE!!!
+This ensures tests do not affect the production or development database.
 
 ---
 
-# Future Improvements
+## Ride View Tests
 
-Potential future features include:
+Ride view tests verify that ride pages render correctly and that authenticated users can interact with rides.
 
-- user profiles
-- ride difficulty ratings
-- rider avatars
-- route filtering
-- ride search
-- calendar view
-- mobile UI improvements
-- push notifications
-- improved GPX analytics
+These tests confirm that:
 
----
+- the ride detail page loads successfully
+- ride information appears correctly
+- the comment form is displayed
+- logged-in users can submit comments
+- comments are correctly stored in the database
 
-# Credits
+Example of the test implementation:
 
-## Libraries and Tools
+![Python Test Code](readme-files/tests/python tests doc.png)
 
-- Django
-- Bootstrap
-- Leaflet
-- Chart.js
+This test simulates the following behaviour:
 
-## Inspiration
-
-Cycling community platforms and ride organisation tools.
+1. A test user is created.
+2. A membership plan and membership purchase are created.
+3. A ride is created.
+4. The test client logs in the user.
+5. A POST request is sent to submit a comment.
+6. The test verifies the comment was saved successfully.
 
 ---
 
-# Acknowledgements
+## Python Test Execution
 
-Thanks to the cycling community and open-source tools that made this project possible.
+The following screenshot shows the successful execution of the Django test suite.
+
+All tests passed successfully.
+
+![Python Test Results](readme-files/tests/python tests.png)
+
+# HTML Validation
+
+HTML markup was validated using the **W3C Nu HTML Checker**.
+
+Validator link:  
+https://validator.w3.org/nu/
+
+Because Django templates contain template tags (`{% %}` and `{{ }}`), validation was performed on the **rendered HTML output** in the browser rather than the raw template files.
+
+This ensures the final HTML delivered to users is standards-compliant.
+
+---
+
+## Home Page Validation
+
+Validator used:  
+https://validator.w3.org/nu/
+
+![Home HTML Validation](readme-files/tests/home html validator.png)
+
+Result:  
+No errors or warnings were found.
+
+---
+
+## Ride List Page Validation
+
+Validator used:  
+https://validator.w3.org/nu/
+
+![Ride List HTML Validation](readme-files/tests/ride list html validator.png)
+
+Result:  
+The page validated successfully with no structural HTML errors.
+
+---
+
+## Ride Detail Page Validation
+
+Validator used:  
+https://validator.w3.org/nu/
+
+![Ride Details HTML Validation](readme-files/tests/ride details html validator.png)
+
+Result:  
+The ride detail page also validated successfully with no errors.
+
+---
+
+# CSS Validation
+
+CSS stylesheets were validated using the **W3C CSS Validator**.
+
+Validator link:  
+https://jigsaw.w3.org/css-validator/
+
+The validator confirmed that the stylesheet contains no syntax errors and complies with **CSS Level 3 + SVG** standards.
+
+![CSS Validation](readme-files/tests/css validator.png)
+
+Result:  
+No CSS errors were found.
