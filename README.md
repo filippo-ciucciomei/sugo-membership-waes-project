@@ -296,7 +296,7 @@ These tests confirm that:
 
 Example of the test implementation:
 
-![Python Test Code](readme-files/tests/python tests doc.png)
+![Python Test Code](readme-files/tests/python%20tests%20doc.png)
 
 This test simulates the following behaviour:
 
@@ -315,7 +315,7 @@ The following screenshot shows the successful execution of the Django test suite
 
 All tests passed successfully.
 
-![Python Test Results](readme-files/tests/python tests.png)
+![Python Test Results](readme-files/tests/python%20tests.png)
 
 # HTML Validation
 
@@ -335,7 +335,7 @@ This ensures the final HTML delivered to users is standards-compliant.
 Validator used:  
 https://validator.w3.org/nu/
 
-![Home HTML Validation](readme-files/tests/home html validator.png)
+![Home HTML Validation](readme-files/tests/home%20html%20validator.png)
 
 Result:  
 No errors or warnings were found.
@@ -347,7 +347,7 @@ No errors or warnings were found.
 Validator used:  
 https://validator.w3.org/nu/
 
-![Ride List HTML Validation](readme-files/tests/ride list html validator.png)
+![Ride List HTML Validation](readme-files/tests/ride%20list%20html%20validator.png)
 
 Result:  
 The page validated successfully with no structural HTML errors.
@@ -359,7 +359,7 @@ The page validated successfully with no structural HTML errors.
 Validator used:  
 https://validator.w3.org/nu/
 
-![Ride Details HTML Validation](readme-files/tests/ride details html validator.png)
+![Ride Details HTML Validation](readme-files/tests/ride%20details%20html%20validator.png)
 
 Result:  
 The ride detail page also validated successfully with no errors.
@@ -375,7 +375,8 @@ https://jigsaw.w3.org/css-validator/
 
 The validator confirmed that the stylesheet contains no syntax errors and complies with **CSS Level 3 + SVG** standards.
 
-![CSS Validation](readme-files/tests/css validator.png)
+![CSS Validation](readme-files/tests/css%20validator.png)
+
 
 Result:  
 No CSS errors were found.
